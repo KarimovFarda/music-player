@@ -17,7 +17,8 @@ let music = player.getMusic();
 window.addEventListener("load", () => {
     let music = player.getMusic();
     displayMusic(music);
-    displayMusicList(player.musicList)
+    displayMusicList(player.musicList);
+    isPlaying();
 })
 
 function displayMusic(music) {
@@ -43,13 +44,16 @@ const prevMusic = () => {
     player.previous();
     music = player.getMusic();
     displayMusic(music);
-    playMusic()
+    playMusic();
+    isPlaying();
 }
 const nextMusic = () => {
     player.next();
     music = player.getMusic();
     displayMusic(music);
-    playMusic()
+    playMusic();
+    isPlaying();
+
 }
 const pauseMusic = () => {
     audio.pause();
@@ -76,11 +80,12 @@ function calculateTime(time) {
 audio.addEventListener("timeupdate", () => {
     progressBar.value = Math.floor(audio.currentTime);
     currentTime.textContent = calculateTime(progressBar.value)
-    if (audio.currentTime == audio.duration) {
-        nextMusic()
-    }
 })
 
+audio.addEventListener("ended", () => {
+        nextMusic()
+    
+})
 progressBar.addEventListener("input", () => {
     currentTime.textContent = calculateTime(progressBar.value);
     audio.currentTime = progressBar.value
@@ -113,20 +118,35 @@ const displayMusicList = (list) => {
     for (let item of list) {
         console.log(item.file.duration)
         let liTag = `
-        <li class="list-group-item d-flex align-items-center justify-content-between">
+        <li li-index=${list.indexOf(item)} onclick="selectedMusic(this)" class="list-group-item d-flex align-items-center justify-content-between">
         <span>${item.getName()}</span>
         <span id="music-${list.indexOf(item)}" class="badge bg-primary rounded-pill">3:40</span>
         <audio class="music-${list.indexOf(item)}" src="mp3/${item.file}"></audio>
     </li>`
 
-    ul.insertAdjacentHTML("beforeend", liTag)
+        ul.insertAdjacentHTML("beforeend", liTag)
+        let liAudioDuration = ul.querySelector(`#music-${list.indexOf(item)}`);
+        let liAudioTag = ul.querySelector(`.music-${list.indexOf(item)}`)
+        liAudioTag.addEventListener("loadeddata", () => {
+            liAudioDuration.innerText = calculateTime(liAudioTag.duration)
+        })
+    }
+}
 
-    let liAudioDuration = ul.querySelector(`#music-${list.indexOf(item)}`);
-    let liAudioTag = ul.querySelector(`.music-${list.indexOf(item)}`)
+const selectedMusic = (li) => {
+    player.index = li.getAttribute("li-index");;
+    displayMusic(player.getMusic());
+    playMusic();isPlaying();
+}
 
+const isPlaying = () => {
+    for(let li of ul.querySelectorAll("li")){
+        if(li.classList.contains("playing")){
+            li.classList.remove("playing")
+        }
 
-    liAudioTag.addEventListener("loadeddata", () => {
-        liAudioDuration.innerText = calculateTime(liAudioTag.duration)
-    })
+        if(li.getAttribute("li-index") == player.index){
+            li.classList.add("playing")
+        }
     }
 }
