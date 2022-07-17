@@ -1,23 +1,38 @@
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
 .container{
-    width: 350px;
+    width: 400px;
 }
-#controls i{
-    font-size: 30px;
-    color:purple;
-    margin-right: 20px;
-}
+
 #progress{
     margin-bottom: 20px;
 }
 #progress .times, #controls{
     display: flex;
     align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+#progress .times{
     justify-content: space-between;
 }
+
+ .card-footer, .volume-container{
+     display: flex;
+     align-items:center;
+     justify-content: space-between;
+ }
+ .volume-container{
+     gap: 10px;
+ }
 #progress-bar{
     width:100%;
-
 }
 #music-image{
     width: 100%;
+    height: 230px;
 }

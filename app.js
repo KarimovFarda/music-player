@@ -9,13 +9,15 @@ const duration = document.querySelector("#duration")
 const currentTime = document.querySelector("#current-time");
 const progressBar = document.querySelector("#progress-bar");
 const volume = document.querySelector("#volume");
-const volumeBar = document.querySelector("#volume-bar")
+const volumeBar = document.querySelector("#volume-bar");
+const ul = document.querySelector("ul")
 
 const player = new MusicPlayer(musicList);
 let music = player.getMusic();
 window.addEventListener("load", () => {
     let music = player.getMusic();
     displayMusic(music);
+    displayMusicList(player.musicList)
 })
 
 function displayMusic(music) {
@@ -52,11 +54,11 @@ const nextMusic = () => {
 const pauseMusic = () => {
     audio.pause();
     container.classList.remove("playing");
-    play.classList = "fa-solid fa-play"
+    play.querySelector("i").classList = "fa-solid fa-play"
 }
 const playMusic = () => {
     audio.play();
-    play.classList = "fa-solid fa-pause"
+    play.querySelector("i").classList = "fa-solid fa-pause"
     container.classList.add("playing")
 }
 audio.addEventListener("loadedmetadata", () => {
@@ -74,7 +76,7 @@ function calculateTime(time) {
 audio.addEventListener("timeupdate", () => {
     progressBar.value = Math.floor(audio.currentTime);
     currentTime.textContent = calculateTime(progressBar.value)
-    if(audio.currentTime == audio.duration){
+    if (audio.currentTime == audio.duration) {
         nextMusic()
     }
 })
@@ -84,12 +86,12 @@ progressBar.addEventListener("input", () => {
     audio.currentTime = progressBar.value
 })
 const defineVolumeLevel = (level = 100) => {
-    if(muteState !== "muted"){
+    if (muteState !== "muted") {
         audio.muted = false;
         muteState = "muted";
         volume.classList = "fa-solid fa-volume-high";
         volumeBar.value = level;
-    }else{
+    } else {
         audio.muted = true;
         muteState = "unmuted";
         volume.classList = "fa-solid fa-volume-xmark";
@@ -97,7 +99,7 @@ const defineVolumeLevel = (level = 100) => {
     }
 }
 let muteState = "muted";
-volume.addEventListener("click" , () => {
+volume.addEventListener("click", () => {
     defineVolumeLevel()
 })
 
@@ -106,3 +108,25 @@ volumeBar.addEventListener("input", (e) => {
     audio.volume = volumeLevel / 100;
     defineVolumeLevel(volumeLevel)
 })
+
+const displayMusicList = (list) => {
+    for (let item of list) {
+        console.log(item.file.duration)
+        let liTag = `
+        <li class="list-group-item d-flex align-items-center justify-content-between">
+        <span>${item.getName()}</span>
+        <span id="music-${list.indexOf(item)}" class="badge bg-primary rounded-pill">3:40</span>
+        <audio class="music-${list.indexOf(item)}" src="mp3/${item.file}"></audio>
+    </li>`
+
+    ul.insertAdjacentHTML("beforeend", liTag)
+
+    let liAudioDuration = ul.querySelector(`#music-${list.indexOf(item)}`);
+    let liAudioTag = ul.querySelector(`.music-${list.indexOf(item)}`)
+
+
+    liAudioTag.addEventListener("loadeddata", () => {
+        liAudioDuration.innerText = calculateTime(liAudioTag.duration)
+    })
+    }
+}

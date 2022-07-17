@@ -8,7 +8,7 @@ class Music{
 
 
     getName(){
-        return this.title + " " + this.singer
+        return this.title + " - " + this.singer
     }
 }
 
@@ -16,5 +16,5 @@ class Music{
 const musicList = [
     new Music("İmdat","Çakal", "1.png","1.mp3" ),
     new Music("Tutsak","Sefo", "2.jpeg","2.mp3" ),
-    new Music("Es Deli Deli","Burat Bulut & Kurtuluş Kuş", "3.jpeg","3.mp3" )
+    new Music("Es Deli Deli","Burak & Kurtuluş ", "3.jpeg","3.mp3" )
 ]
