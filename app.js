@@ -83,8 +83,8 @@ audio.addEventListener("timeupdate", () => {
 })
 
 audio.addEventListener("ended", () => {
-        nextMusic()
-    
+    nextMusic()
+
 })
 progressBar.addEventListener("input", () => {
     currentTime.textContent = calculateTime(progressBar.value);
@@ -116,7 +116,6 @@ volumeBar.addEventListener("input", (e) => {
 
 const displayMusicList = (list) => {
     for (let item of list) {
-        console.log(item.file.duration)
         let liTag = `
         <li li-index=${list.indexOf(item)} onclick="selectedMusic(this)" class="list-group-item d-flex align-items-center justify-content-between">
         <span>${item.getName()}</span>
@@ -136,16 +135,17 @@ const displayMusicList = (list) => {
 const selectedMusic = (li) => {
     player.index = li.getAttribute("li-index");;
     displayMusic(player.getMusic());
-    playMusic();isPlaying();
+    playMusic();
+    isPlaying();
 }
 
 const isPlaying = () => {
-    for(let li of ul.querySelectorAll("li")){
-        if(li.classList.contains("playing")){
+    for (let li of ul.querySelectorAll("li")) {
+        if (li.classList.contains("playing")) {
             li.classList.remove("playing")
         }
 
-        if(li.getAttribute("li-index") == player.index){
+        if (li.getAttribute("li-index") == player.index) {
             li.classList.add("playing")
         }
     }
