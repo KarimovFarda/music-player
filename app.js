@@ -22,7 +22,6 @@ window.addEventListener("load", () => {
 })
 
 function displayMusic(music) {
-    console.log(music)
     title.innerText = music.title;
     singer.innerText = music.singer;
     image.src = "images/" + music.img;
